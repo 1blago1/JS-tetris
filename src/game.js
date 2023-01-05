@@ -22,16 +22,37 @@ export default class Game {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   activePiece = {
     x: 0,
     y: 0,
-    blocks: [
-      [0, 1, 0],
-      [1, 1, 1],
-      [0, 0, 0],
+    get blocks() {
+      return this.rotations[this.rotationIndex];
+    },
+    rotationIndex: 0,
+    rotations: [
+      [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
     ],
   };
 
@@ -56,9 +77,32 @@ export default class Game {
     }
   }
 
+  // ratatePiece() {
+  //   if (this.activePiece.rotationIndex === 3) {
+  //     this.activePiece.rotationIndex = 0;
+  //   } else {
+  //     this.activePiece.rotationIndex += 1;
+  //   }
+  // }
+  rotatePiece() {
+    this.activePiece.rotationIndex =
+      this.activePiece.rotationIndex < 3
+        ? this.activePiece.rotationIndex + 1
+        : 0;
+
+    // this.activePiece.rotationIndex = (this.activePiece.rotationIndex + 1) % 4;
+    if (this.hasCollisions()) {
+      this.activePiece.rotationIndex =
+        this.activePiece.rotationIndex > 0
+          ? this.activePiece.rotationIndex - 1
+          : 3;
+    }
+    return this.activePiece.blocks;
+  }
+
   hasCollisions() {
     const { y: pieceY, x: pieceX, blocks } = this.activePiece;
-
+    //заменить undefined на оператор нулевого слияния
     for (let y = 0; y < blocks.length; y++) {
       for (let x = 0; x < blocks[y].length; x++) {
         if (
