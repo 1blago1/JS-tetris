@@ -13,4 +13,5 @@ body {
 #root canvas {
   display: block;
   margin: 0;
+  border: 4px solid white;
 }
